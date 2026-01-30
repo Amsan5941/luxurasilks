@@ -2,39 +2,87 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { featuredSarees } from "@/lib/data";
 
+const VIDEO_URL = "https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4";
+const POSTER_URL = "/hero/Copy of 3J9A6998.webp";
+
 export default function Home() {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const bgVideoRef = useRef<HTMLVideoElement>(null);
+  const mainVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Sync both videos and handle 23-second loop
+  useEffect(() => {
+    const syncVideos = () => {
+      if (bgVideoRef.current && mainVideoRef.current) {
+        const mainTime = mainVideoRef.current.currentTime;
+        if (mainTime >= 23) {
+          mainVideoRef.current.currentTime = 0;
+          bgVideoRef.current.currentTime = 0;
+        }
+      }
+    };
+
+    const mainVideo = mainVideoRef.current;
+    if (mainVideo) {
+      mainVideo.addEventListener("timeupdate", syncVideos);
+      return () => mainVideo.removeEventListener("timeupdate", syncVideos);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-screen min-h-[600px] max-h-[1000px] w-full overflow-hidden">
+        
+        {/* Poster Image - Shows instantly while video loads */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}>
+          <Image
+            src={POSTER_URL}
+            alt="LuxuraSilks - Premium Handcrafted Sarees"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Same gradient overlay for consistency */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </div>
+
         {/* Background Blurred Video */}
-        <div className="absolute inset-0">
+        <div className={`absolute inset-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <video
+            ref={bgVideoRef}
             autoPlay
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster={POSTER_URL}
             className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           >
-            <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
+            <source src={VIDEO_URL} type="video/mp4" />
           </video>
         </div>
 
         {/* Main Hero Video */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <div className={`absolute inset-0 z-10 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <video
+            ref={mainVideoRef}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            className="w-full h-full object-contain"
+            poster={POSTER_URL}
+            onCanPlay={() => setIsVideoLoaded(true)}
+            className="absolute inset-0 w-full h-full object-contain"
           >
-            <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
+            <source src={VIDEO_URL} type="video/mp4" />
           </video>
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
