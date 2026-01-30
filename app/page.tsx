@@ -24,7 +24,7 @@ export default function Home() {
               }
             }}
           >
-            <source src="/hero/Copy of differentorder.mp4" type="video/mp4" />
+            <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
           </video>
         </div>
 
@@ -42,7 +42,7 @@ export default function Home() {
               }
             }}
           >
-            <source src="/hero/Copy of differentorder.mp4" type="video/mp4" />
+            <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
             {/* Fallback image if video doesn't load */}
             <Image
               src="/hero/Copy of 3J9A6998.webp"
