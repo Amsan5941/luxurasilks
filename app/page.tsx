@@ -6,11 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { featuredSarees } from "@/lib/data";
 
-// Local video sources for different quality levels
+// Local video sources for different quality levels - fastest first for quick loading
 const VIDEO_SOURCES = [
-  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" }, // Best balance - fast loading + good quality
-  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }, // Fastest fallback
-  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" } // Highest quality for fast connections
+  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }, // Fastest loading (3.7MB)
+  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" }, // Good quality fallback (19MB)
+  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" } // Premium quality (57MB)
 ];
 const POSTER_URL = "/hero/heritage-poster.webp";
 
@@ -51,19 +51,33 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen min-h-[600px] max-h-[1000px] w-full overflow-hidden">
         
-        {/* Poster Image - Shows instantly while video loads */}
+        {/* Poster Images - Shows instantly while video loads */}
         <div className={`absolute inset-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}>
-          <Image
-            src={POSTER_URL}
-            alt="LuxuraSilks - Premium Handcrafted Sarees"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+          {/* Background Blurred Poster */}
+          <div className="absolute inset-0">
+            <Image
+              src={POSTER_URL}
+              alt="LuxuraSilks Background"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center blur-md scale-110"
+            />
+          </div>
+          {/* Main Poster - Portrait Style */}
+          <div className="absolute inset-0 z-10">
+            <Image
+              src={POSTER_URL}
+              alt="LuxuraSilks - Premium Handcrafted Sarees"
+              fill
+              priority
+              sizes="100vw"
+              className="object-contain object-center"
+            />
+          </div>
           {/* Same gradient overlay for consistency */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent z-20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-20" />
         </div>
 
         {/* Background Blurred Video */}
@@ -74,7 +88,7 @@ export default function Home() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster={POSTER_URL}
             className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           >
