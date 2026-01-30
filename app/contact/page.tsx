@@ -128,7 +128,7 @@ export default function ContactPage() {
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src="/images/sarees/IMG_4645.jpg"
+                  src="/sarees/IMG_4645.webp"
                   alt="LuxuraSilks Collection"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"

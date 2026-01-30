@@ -11,7 +11,7 @@ export default function Footer() {
             <Link href="/" className="inline-flex items-center gap-3 mb-6 group">
               <div className="relative w-14 h-14 sm:w-24 sm:h-24 bg-white rounded-lg p-2.5 transition-all duration-300 group-hover:shadow-lg">
                 <Image
-                  src="/images/logo/LuxuraSilks.png"
+                  src="/logo/LuxuraSilks.webp"
                   alt="LuxuraSilks"
                   fill
                   className="object-contain"

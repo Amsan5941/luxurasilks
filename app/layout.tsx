@@ -35,9 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <head>
-        <link rel="icon" href="/icon_no_bg.png" sizes="any" />
-        <link rel="icon" href="/icon_no_bg.png" sizes="32x32" />
-        <link rel="shortcut icon" href="/icon_no_bg.png" />
+        <link rel="icon" href="/logo/LuxuraSilks.webp" sizes="any" />
+        <link rel="icon" href="/logo/LuxuraSilks.webp" sizes="32x32" />
+        <link rel="shortcut icon" href="/logo/LuxuraSilks.webp" />
       </head>
       <body className="font-sans antialiased bg-[#FFFEFA] text-[#1A1A1A] overflow-x-hidden">
         <Header />

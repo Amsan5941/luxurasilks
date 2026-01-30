@@ -21,7 +21,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
             <div className="relative w-9 h-9 sm:w-10 sm:h-10 lg:w-24 lg:h-24 bg-white rounded-md shadow-sm border border-[#FFE2E2]/20 p-1.5 transition-all duration-300 group-hover:border-[#FFE2E2]/40 group-hover:shadow">
               <Image
-                src="/images/logo/LuxuraSilks.png"
+                src="/logo/LuxuraSilks.webp"
                 alt="LuxuraSilks"
                 fill
                 className="object-contain"

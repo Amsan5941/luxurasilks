@@ -13,7 +13,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-1", 
     name: "Rose x Gold", 
-    image: "/images/sarees/IMG_4629.jpg", 
+    image: "/sarees/IMG_4629.webp", 
     description: "A soft romance woven in timeless kanchipuram elegance",
     fabric: "Pure Kanchipuram Silk",
     style: "Traditional Wedding",
@@ -22,7 +22,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-2", 
     name: "Orchid x Copper", 
-    image: "/images/sarees/IMG_4630.jpg", 
+    image: "/sarees/IMG_4630.webp", 
     description: "A kanchipuram classic with a warm copper glow",
     fabric: "Banarasi Silk",
     style: "Festive Occasion",
@@ -31,7 +31,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-3", 
     name: "Blush x Copper", 
-    image: "/images/sarees/IMG_4633.jpg", 
+    image: "/sarees/IMG_4633.webp", 
     description: "A gentle Kanchipuram masterpiece woven in tradition",
     fabric: "Tussar Silk",
     style: "Contemporary Ethnic",
@@ -40,7 +40,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-4", 
     name: "Plum x Bronze", 
-    image: "/images/sarees/IMG_4635.jpg", 
+    image: "/sarees/IMG_4635.webp", 
     description: "Where regal plum meets the warmth of bronze kanchipuram ",
     fabric: "Raw Silk",
     style: "Elegant Casual",
@@ -49,7 +49,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-5", 
     name: "Emerald x Gold", 
-    image: "/images/sarees/IMG_4645.jpg", 
+    image: "/sarees/IMG_4645.webp", 
     description: "A deep, earthy Kanchipuram elegance",
     fabric: "Patola Silk",
     style: "Heritage Collection",
@@ -58,7 +58,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-6", 
     name: "Olive x Gold", 
-    image: "/images/sarees/IMG_4647.jpg", 
+    image: "/sarees/IMG_4647.webp", 
     description: "A whisper of pure Kanchipuram elegance",
     fabric: "Chanderi Silk",
     style: "Graceful Drape",
@@ -67,7 +67,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-7", 
     name: "Mint x Gold", 
-    image: "/images/sarees/IMG_4659_jpg.jpg", 
+    image: "/sarees/IMG_4659_jpg.webp", 
     description: "A quiet touch of nature in pure kanchipuram silk",
     fabric: "Organza Silk",
     style: "Evening Wear",
@@ -76,7 +76,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-8", 
     name: "Ocean x Gold", 
-    image: "/images/sarees/IMG_4663.jpg", 
+    image: "/sarees/IMG_4663.webp", 
     description: "Where ocean tones meet the heritage of kanchipuram weaves",
     fabric: "Mysore Silk",
     style: "Understated Luxury",
@@ -85,7 +85,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-9", 
     name: "Royal x Gold", 
-    image: "/images/sarees/IMG_4666.jpg", 
+    image: "/sarees/IMG_4666.webp", 
     description: "A bold regality expressed through classic kanchipuram artistry",
     fabric: "Kanjivaram Silk",
     style: "Royal Collection",
@@ -94,7 +94,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-10", 
     name: "Aqua x Gold", 
-    image: "/images/sarees/IMG_4675.jpg", 
+    image: "/sarees/IMG_4675.webp", 
     description: "A breath of calm kanchipuram grace",
     fabric: "Tissue Silk",
     style: "Modern Elegance",
@@ -103,7 +103,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-11", 
     name: "Powder Blue x Gold", 
-    image: "/images/sarees/IMG_4677.jpg", 
+    image: "/sarees/IMG_4677.webp", 
     description: "A kanchipuram symphony of calm and opulence",
     fabric: "Handloom Silk",
     style: "Romantic Traditional",
@@ -112,7 +112,7 @@ export const allSarees: Saree[] = [
   { 
     id: "silk-elegance-12", 
     name: "Champagne x Bronze", 
-    image: "/images/sarees/IMG_4627.jpg", 
+    image: "/sarees/IMG_4627.webp", 
     description: "A delicate Kanchipuram weave in soft blush tones and antique warmth",
     fabric: "Pure Silk",
     style: "Classic Luxury",
@@ -123,8 +123,8 @@ export const allSarees: Saree[] = [
 // Featured sarees for homepage (custom selection with varied colors)
 export const featuredSarees = [
   allSarees[0],  // Royal Silk Elegance - red
-  allSarees[4],  // Emerald Splendor - green (IMG_4645.jpg)
-  allSarees[7],  // Pearl Whisper - blue (IMG_4663.jpg)
+  allSarees[4],  // Emerald Splendor - green (IMG_4645.webp)
+  allSarees[7],  // Pearl Whisper - blue (IMG_4663.webp)
   allSarees[3],  // Ivory Dreams
 ];
 

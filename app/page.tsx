@@ -24,7 +24,7 @@ export default function Home() {
               }
             }}
           >
-            <source src="/images/hero/Copy of differentorder.mp4" type="video/mp4" />
+            <source src="/hero/Copy of differentorder.mp4" type="video/mp4" />
           </video>
         </div>
 
@@ -42,10 +42,10 @@ export default function Home() {
               }
             }}
           >
-            <source src="/images/hero/Copy of differentorder.mp4" type="video/mp4" />
+            <source src="/hero/Copy of differentorder.mp4" type="video/mp4" />
             {/* Fallback image if video doesn't load */}
             <Image
-              src="/images/hero/Copy of 3J9A6998.jpg"
+              src="/hero/Copy of 3J9A6998.webp"
               alt="LuxuraSilks - Premium Handcrafted Sarees"
               fill
               priority
@@ -109,7 +109,7 @@ export default function Home() {
             <div className="relative order-2 lg:order-1">
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
-                  src="/images/hero/Copy of Screen Shot 2025-07-05 at 12.jpg"
+                  src="/hero/Copy of Screen Shot 2025-07-05 at 12.webp"
                   alt="LuxuraSilks Heritage"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
