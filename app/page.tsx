@@ -6,22 +6,35 @@ import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { featuredSarees } from "@/lib/data";
 
-const VIDEO_URL = "https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4";
-const POSTER_URL = "/hero/Copy of 3J9A6998.webp";
+// Local video sources for different quality levels
+const VIDEO_SOURCES = [
+  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" }, // Highest quality first
+  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" },
+  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }
+];
+const POSTER_URL = "/hero/heritage-poster.webp";
 
 export default function Home() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const bgVideoRef = useRef<HTMLVideoElement>(null);
   const mainVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Sync both videos and handle 23-second loop
+  // Sync both videos for smooth playback
   useEffect(() => {
     const syncVideos = () => {
-      if (bgVideoRef.current && mainVideoRef.current) {
-        const mainTime = mainVideoRef.current.currentTime;
-        if (mainTime >= 23) {
-          mainVideoRef.current.currentTime = 0;
-          bgVideoRef.current.currentTime = 0;
+      if (bgVideoRef.current && mainVideoRef.current && isVideoLoaded) {
+        try {
+          // Sync background video with main video
+          const mainTime = mainVideoRef.current.currentTime;
+          const bgTime = bgVideoRef.current.currentTime;
+          
+          // If videos are more than 0.5 seconds out of sync, sync them
+          if (Math.abs(mainTime - bgTime) > 0.5) {
+            bgVideoRef.current.currentTime = mainTime;
+          }
+        } catch (error) {
+          // Silently handle any sync errors
+          console.debug('Video sync adjustment:', error);
         }
       }
     };
@@ -31,7 +44,7 @@ export default function Home() {
       mainVideo.addEventListener("timeupdate", syncVideos);
       return () => mainVideo.removeEventListener("timeupdate", syncVideos);
     }
-  }, []);
+  }, [isVideoLoaded]);
 
   return (
     <div className="flex flex-col">
@@ -65,7 +78,11 @@ export default function Home() {
             poster={POSTER_URL}
             className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           >
-            <source src={VIDEO_URL} type="video/mp4" />
+            {VIDEO_SOURCES.map((source, index) => (
+              <source key={index} src={source.src} type={source.type} />
+            ))}
+            {/* Fallback for browsers that don't support any of the video formats */}
+            <p>Your browser does not support the video element.</p>
           </video>
         </div>
 
@@ -80,9 +97,14 @@ export default function Home() {
             preload="auto"
             poster={POSTER_URL}
             onCanPlay={() => setIsVideoLoaded(true)}
+            onLoadedData={() => setIsVideoLoaded(true)}
             className="absolute inset-0 w-full h-full object-contain"
           >
-            <source src={VIDEO_URL} type="video/mp4" />
+            {VIDEO_SOURCES.map((source, index) => (
+              <source key={index} src={source.src} type={source.type} />
+            ))}
+            {/* Fallback for browsers that don't support any of the video formats */}
+            <p>Your browser does not support the video element.</p>
           </video>
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
@@ -140,7 +162,7 @@ export default function Home() {
             <div className="relative order-2 lg:order-1">
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
-                  src="/hero/Copy of Screen Shot 2025-07-05 at 12.webp"
+                  src="/hero/heritage-image.webp"
                   alt="LuxuraSilks Heritage"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
