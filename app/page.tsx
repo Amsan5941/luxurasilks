@@ -8,9 +8,9 @@ import { featuredSarees } from "@/lib/data";
 
 // Local video sources for different quality levels
 const VIDEO_SOURCES = [
-  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" }, // Highest quality first
-  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" },
-  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }
+  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" }, // Best balance - fast loading + good quality
+  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }, // Fastest fallback
+  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" } // Highest quality for fast connections
 ];
 const POSTER_URL = "/hero/heritage-poster.webp";
 
