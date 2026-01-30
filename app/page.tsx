@@ -17,41 +17,24 @@ export default function Home() {
             muted
             loop
             playsInline
-            className="absolute inset-0 w-full h-full object-cover blur-sm"
-            onTimeUpdate={(e) => {
-              if (e.currentTarget.currentTime >= 23) {
-                e.currentTarget.currentTime = 0;
-              }
-            }}
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           >
             <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
           </video>
         </div>
 
         {/* Main Hero Video */}
-        <div className="absolute inset-0 z-10">
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
           <video
             autoPlay
             muted
             loop
             playsInline
-            className="absolute inset-0 w-full h-full object-contain"
-            onTimeUpdate={(e) => {
-              if (e.currentTarget.currentTime >= 23) {
-                e.currentTarget.currentTime = 0;
-              }
-            }}
+            preload="auto"
+            className="w-full h-full object-contain"
           >
             <source src="https://ssapblea9ejcanzc.public.blob.vercel-storage.com/Copy%20of%20differentorder.mp4" type="video/mp4" />
-            {/* Fallback image if video doesn't load */}
-            <Image
-              src="/hero/Copy of 3J9A6998.webp"
-              alt="LuxuraSilks - Premium Handcrafted Sarees"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-            />
           </video>
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
