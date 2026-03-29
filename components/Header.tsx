@@ -2,11 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/collection", label: "Collection" },
@@ -26,6 +23,7 @@ export default function Header() {
                 fill
                 className="object-contain"
                 priority
+                sizes="(max-width: 1024px) 40px, 96px"
               />
             </div>
             <div className="flex flex-col">

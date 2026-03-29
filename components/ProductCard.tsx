@@ -6,9 +6,12 @@ interface ProductCardProps {
   name: string;
   image: string;
   description?: string;
+  priority?: boolean;
 }
 
-export default function ProductCard({ id, name, image, description }: ProductCardProps) {
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
+
+export default function ProductCard({ id, name, image, description, priority = false }: ProductCardProps) {
   return (
     <Link 
       href={`/collection/${id}`}
@@ -22,6 +25,11 @@ export default function ProductCard({ id, name, image, description }: ProductCar
             alt={name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
+            quality={75}
             className="object-contain transition-transform duration-700 group-hover:scale-105"
           />
         </div>

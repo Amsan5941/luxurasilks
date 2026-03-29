@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface VideoSource {
   src: string;
@@ -24,19 +24,16 @@ export default function HeroVideo({
   onVideoLoad
 }: HeroVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleCanPlay = () => {
-      setIsLoaded(true);
       onVideoLoad?.();
     };
 
     const handleLoadedData = () => {
-      setIsLoaded(true);
       onVideoLoad?.();
     };
 

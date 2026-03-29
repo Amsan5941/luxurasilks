@@ -15,6 +15,8 @@ export default function Footer() {
                   alt="LuxuraSilks"
                   fill
                   className="object-contain"
+                  sizes="(max-width: 640px) 56px, 96px"
+                  loading="lazy"
                 />
               </div>
               <div className="flex flex-col">

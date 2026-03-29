@@ -38,6 +38,10 @@ export default function RootLayout({
         <link rel="icon" href="/logo/LuxuraSilks.webp" sizes="any" />
         <link rel="icon" href="/logo/LuxuraSilks.webp" sizes="32x32" />
         <link rel="shortcut icon" href="/logo/LuxuraSilks.webp" />
+        <link rel="preload" as="image" href="/logo/LuxuraSilks.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/hero/heritage-poster.webp" fetchPriority="high" />
+        <link rel="preload" as="video" href="/hero/hero-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
+        <link rel="preload" as="video" href="/hero/hero-desktop.mp4" type="video/mp4" media="(min-width: 769px)" />
       </head>
       <body className="font-sans antialiased bg-[#FFFEFA] text-[#1A1A1A] overflow-x-hidden">
         <Header />

@@ -9,6 +9,8 @@ interface ProductDetailClientProps {
   saree: Saree;
 }
 
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
+
 export default function ProductDetailClient({ saree }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -49,6 +51,9 @@ export default function ProductDetailClient({ saree }: ProductDetailClientProps)
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                   priority
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
+                  quality={82}
                 />
               </div>
               
@@ -70,6 +75,10 @@ export default function ProductDetailClient({ saree }: ProductDetailClientProps)
                       fill
                       sizes="100px"
                       className="object-cover"
+                      placeholder="blur"
+                      blurDataURL={BLUR_PLACEHOLDER}
+                      loading="lazy"
+                      quality={70}
                     />
                   </button>
                 ))}

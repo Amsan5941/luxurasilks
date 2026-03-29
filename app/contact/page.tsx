@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
+
 export default function ContactPage() {
   return (
     <div className="pt-24 sm:pt-28 lg:pt-32">
@@ -128,10 +130,13 @@ export default function ContactPage() {
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src="/sarees/IMG_4645.webp"
+                  src="/sarees-optimized/IMG_4645.webp"
                   alt="LuxuraSilks Collection"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
+                  quality={80}
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />

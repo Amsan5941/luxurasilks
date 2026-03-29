@@ -6,13 +6,14 @@ import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { featuredSarees } from "@/lib/data";
 
-// Local video sources for different quality levels - fastest first for quick loading
+// Media-specific video ladder to minimize first-load bytes per device.
 const VIDEO_SOURCES = [
-  { src: "/hero/video-480p.mp4", type: "video/mp4", quality: "480p" }, // Fastest loading (3.7MB)
-  { src: "/hero/hero-video.mp4", type: "video/mp4", quality: "720p" }, // Good quality fallback (19MB)
-  { src: "/hero/new-hero-video.mp4", type: "video/mp4", quality: "1080p" } // Premium quality (57MB)
+  { src: "/hero/hero-mobile.mp4", type: "video/mp4", quality: "mobile", media: "(max-width: 768px)" },
+  { src: "/hero/hero-desktop.mp4", type: "video/mp4", quality: "desktop", media: "(min-width: 769px)" },
+  { src: "/hero/hero-mobile.mp4", type: "video/mp4", quality: "fallback" }
 ];
 const POSTER_URL = "/hero/heritage-poster.webp";
+const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
 
 export default function Home() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -61,6 +62,8 @@ export default function Home() {
               fill
               priority
               sizes="100vw"
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               className="object-cover object-center blur-md scale-110"
             />
           </div>
@@ -72,6 +75,8 @@ export default function Home() {
               fill
               priority
               sizes="100vw"
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               className="object-contain object-center"
             />
           </div>
@@ -88,12 +93,13 @@ export default function Home() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="none"
             poster={POSTER_URL}
+            aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
           >
-            {VIDEO_SOURCES.map((source, index) => (
-              <source key={index} src={source.src} type={source.type} />
+            {VIDEO_SOURCES.slice(0, 1).map((source, index) => (
+              <source key={index} src={source.src} type={source.type} media={source.media} />
             ))}
             {/* Fallback for browsers that don't support any of the video formats */}
             <p>Your browser does not support the video element.</p>
@@ -115,7 +121,7 @@ export default function Home() {
             className="absolute inset-0 w-full h-full object-contain"
           >
             {VIDEO_SOURCES.map((source, index) => (
-              <source key={index} src={source.src} type={source.type} />
+              <source key={index} src={source.src} type={source.type} media={source.media} />
             ))}
             {/* Fallback for browsers that don't support any of the video formats */}
             <p>Your browser does not support the video element.</p>
@@ -180,6 +186,9 @@ export default function Home() {
                   alt="LuxuraSilks Heritage"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
+                  quality={80}
                   className="object-cover"
                 />
               </div>
