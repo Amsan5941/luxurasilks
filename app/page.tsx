@@ -1,421 +1,103 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import ProductCard from "@/components/ProductCard";
+import type { Metadata } from "next";
+import HomePageClient from "@/components/HomePageClient";
 import { featuredSarees } from "@/lib/data";
+import { absoluteUrl } from "@/lib/site";
 
-// Media-specific video ladder to minimize first-load bytes per device.
-const VIDEO_SOURCES = [
-  { src: "/hero/hero-mobile.mp4", type: "video/mp4", quality: "mobile", media: "(max-width: 768px)" },
-  { src: "/hero/hero-desktop.mp4", type: "video/mp4", quality: "desktop", media: "(min-width: 769px)" },
-  { src: "/hero/hero-mobile.mp4", type: "video/mp4", quality: "fallback" }
+const HOME_FAQS = [
+  {
+    question: "What makes Luxura Silks sarees premium?",
+    answer:
+      "Our sarees are handcrafted by skilled artisans using high-grade silk and heritage weaving techniques, with quality checks at every stage.",
+  },
+  {
+    question: "How do I choose the right saree for an occasion?",
+    answer:
+      "You can browse by style and fabric on our collection page, then contact us for personalized recommendations based on your event and preferences.",
+  },
+  {
+    question: "Do you support custom saree requests?",
+    answer:
+      "Yes, we support custom requests for special occasions, wedding wardrobes, and curated selections via direct consultation.",
+  },
 ];
-const POSTER_URL = "/hero/heritage-poster.webp";
-const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
 
-export default function Home() {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const bgVideoRef = useRef<HTMLVideoElement>(null);
-  const mainVideoRef = useRef<HTMLVideoElement>(null);
+export const metadata: Metadata = {
+  title: "Luxura Silks | Premium Handcrafted Sarees",
+  description:
+    "Shop premium handcrafted silk sarees at Luxura Silks. Discover wedding, festive, and luxury sarees rooted in Indian heritage craftsmanship.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Luxura Silks | Premium Handcrafted Sarees",
+    description:
+      "Discover handcrafted silk sarees that blend timeless Indian craftsmanship with modern elegance.",
+    url: absoluteUrl("/"),
+    siteName: "Luxura Silks",
+    images: [
+      {
+        url: absoluteUrl("/hero/heritage-poster.webp"),
+        width: 1200,
+        height: 630,
+        alt: "Luxura Silks premium handcrafted sarees",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxura Silks | Premium Handcrafted Sarees",
+    description:
+      "Discover handcrafted silk sarees that blend timeless Indian craftsmanship with modern elegance.",
+    images: [absoluteUrl("/hero/heritage-poster.webp")],
+  },
+};
 
-  const tryPlayVideos = () => {
-    const mainVideo = mainVideoRef.current;
-    const bgVideo = bgVideoRef.current;
-
-    if (mainVideo) {
-      const mainPlay = mainVideo.play();
-      if (mainPlay && typeof mainPlay.catch === "function") {
-        mainPlay.catch(() => {
-          // Autoplay can be blocked on some devices until visibility/user gesture.
-        });
-      }
-    }
-
-    if (bgVideo) {
-      const bgPlay = bgVideo.play();
-      if (bgPlay && typeof bgPlay.catch === "function") {
-        bgPlay.catch(() => {
-          // Keep silent; background video is cosmetic.
-        });
-      }
-    }
+export default function HomePage() {
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Luxura Silks Home",
+    url: absoluteUrl("/"),
+    description:
+      "Explore premium handcrafted sarees by Luxura Silks, featuring traditional artistry and contemporary elegance.",
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "h2"],
+    },
   };
 
-  // Sync both videos for smooth playback
-  useEffect(() => {
-    const mainVideo = mainVideoRef.current;
-    const bgVideo = bgVideoRef.current;
-    if (!mainVideo) return;
+  const featuredListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Featured Sarees",
+    itemListElement: featuredSarees.map((saree, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: saree.name,
+      url: absoluteUrl(`/collection/${saree.id}`),
+      image: absoluteUrl(saree.image),
+    })),
+  };
 
-    // Some browsers honor defaultMuted state more reliably for autoplay when set directly.
-    mainVideo.defaultMuted = true;
-    mainVideo.muted = true;
-    if (bgVideo) {
-      bgVideo.defaultMuted = true;
-      bgVideo.muted = true;
-    }
-
-    const handleReady = () => {
-      setIsVideoLoaded(true);
-      tryPlayVideos();
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        tryPlayVideos();
-      }
-    };
-
-    if (mainVideo.readyState >= 2) {
-      handleReady();
-    }
-
-    mainVideo.addEventListener("loadedmetadata", handleReady);
-    mainVideo.addEventListener("loadeddata", handleReady);
-    mainVideo.addEventListener("canplay", handleReady);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      mainVideo.removeEventListener("loadedmetadata", handleReady);
-      mainVideo.removeEventListener("loadeddata", handleReady);
-      mainVideo.removeEventListener("canplay", handleReady);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    const syncVideos = () => {
-      if (bgVideoRef.current && mainVideoRef.current && isVideoLoaded) {
-        try {
-          // Sync background video with main video
-          const mainTime = mainVideoRef.current.currentTime;
-          const bgTime = bgVideoRef.current.currentTime;
-          
-          // If videos are more than 0.5 seconds out of sync, sync them
-          if (Math.abs(mainTime - bgTime) > 0.5) {
-            bgVideoRef.current.currentTime = mainTime;
-          }
-        } catch (error) {
-          // Silently handle any sync errors
-          console.debug('Video sync adjustment:', error);
-        }
-      }
-    };
-
-    const mainVideo = mainVideoRef.current;
-    if (mainVideo) {
-      mainVideo.addEventListener("timeupdate", syncVideos);
-      return () => mainVideo.removeEventListener("timeupdate", syncVideos);
-    }
-  }, [isVideoLoaded]);
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: HOME_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-screen min-h-[600px] max-h-[1000px] w-full overflow-hidden">
-        
-        {/* Poster Images - Shows instantly while video loads */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}>
-          {/* Background Blurred Poster */}
-          <div className="absolute inset-0">
-            <Image
-              src={POSTER_URL}
-              alt="LuxuraSilks Background"
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              className="object-cover object-center blur-md scale-110"
-            />
-          </div>
-          {/* Main Poster - Portrait Style */}
-          <div className="absolute inset-0 z-10">
-            <Image
-              src={POSTER_URL}
-              alt="LuxuraSilks - Premium Handcrafted Sarees"
-              fill
-              priority
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              className="object-contain object-center"
-            />
-          </div>
-          {/* Same gradient overlay for consistency */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent z-20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-20" />
-        </div>
-
-        {/* Background Blurred Video */}
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <video
-            ref={bgVideoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-            poster={POSTER_URL}
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
-          >
-            {VIDEO_SOURCES.slice(0, 1).map((source, index) => (
-              <source key={index} src={source.src} type={source.type} media={source.media} />
-            ))}
-            {/* Fallback for browsers that don't support any of the video formats */}
-            <p>Your browser does not support the video element.</p>
-          </video>
-        </div>
-
-        {/* Main Hero Video */}
-        <div className={`absolute inset-0 z-10 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}>
-          <video
-            ref={mainVideoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster={POSTER_URL}
-            onCanPlay={() => {
-              setIsVideoLoaded(true);
-              tryPlayVideos();
-            }}
-            onLoadedData={() => {
-              setIsVideoLoaded(true);
-              tryPlayVideos();
-            }}
-            className="absolute inset-0 w-full h-full object-contain"
-          >
-            {VIDEO_SOURCES.map((source, index) => (
-              <source key={index} src={source.src} type={source.type} media={source.media} />
-            ))}
-            {/* Fallback for browsers that don't support any of the video formats */}
-            <p>Your browser does not support the video element.</p>
-          </video>
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-20 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-2xl">
-              {/* Decorative Line */}
-              <div className="w-16 h-[2px] bg-[#FFE2E2] mb-6 sm:mb-8" />
-              
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight mb-4 sm:mb-6">
-                Elegance
-                <span className="block text-[#FFE2E2]">Woven in Silk</span>
-              </h1>
-              
-              <p className="text-gray-200 text-base sm:text-lg md:text-xl leading-relaxed mb-8 sm:mb-10 max-w-xl">
-                Discover exquisite handcrafted sarees that blend timeless tradition 
-                with contemporary elegance. Each piece tells a story of heritage and luxury.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/collection"
-                  className="btn-primary text-center text-sm sm:text-base tracking-widest uppercase"
-                >
-                  Explore Collection
-                </Link>
-                <Link
-                  href="/contact"
-                  className="bg-white text-[#2C2C2C] px-8 py-4 text-center text-sm sm:text-base tracking-widest uppercase font-medium shadow-lg hover:bg-[#FFE2E2] hover:shadow-xl hover:scale-105 transition-all duration-300"
-                >
-                  Contact Us
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
-          <svg className="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </section>
-
-      {/* Brand Story Section */}
-      <section className="py-16 sm:py-20 lg:py-28 bg-[#FDF8F3]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Image */}
-            <div className="relative order-2 lg:order-1">
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <Image
-                  src="/hero/heritage-image.webp"
-                  alt="LuxuraSilks Heritage"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  placeholder="blur"
-                  blurDataURL={BLUR_PLACEHOLDER}
-                  quality={80}
-                  className="object-cover"
-                />
-              </div>
-              {/* Decorative Frame */}
-              <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-full h-full border-2 border-[#2C2C2C] -z-10" />
-            </div>
-
-            {/* Content */}
-            <div className="order-1 lg:order-2">
-              <span className="text-[#2C2C2C] text-sm tracking-widest uppercase font-medium">Our Heritage</span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#2C2C2C] mt-4 mb-6 leading-tight">
-                Where Tradition Meets
-                <span className="block text-[#2C2C2C]">Modern Elegance</span>
-              </h2>
-              <div className="w-16 h-[2px] bg-[#2C2C2C] mb-6" />
-              <p className="text-[#4A4A4A] text-base sm:text-lg leading-relaxed mb-6">
-                At LuxuraSilks, we believe every saree carries a story — of skilled artisans, 
-                time-honored techniques, and the dreams of women who wear them. Our collection 
-                celebrates the rich heritage of Indian craftsmanship while embracing contemporary designs.
-              </p>
-              <p className="text-[#4A4A4A] text-base sm:text-lg leading-relaxed mb-8">
-                Each piece in our collection is carefully curated from master weavers across India, 
-                ensuring exceptional quality and authenticity. From the silk threads to the final drape, 
-                every detail reflects our commitment to luxury and elegance.
-              </p>
-              <Link
-                href="/collection"
-                className="inline-flex items-center gap-2 text-[#2C2C2C] font-medium tracking-wide hover:gap-4 transition-all duration-300"
-              >
-                Discover Our Story
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Collection Section */}
-      <section className="py-16 sm:py-20 lg:py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <span className="text-[#2C2C2C] text-sm tracking-widest uppercase font-medium">Curated Selection</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#2C2C2C] mt-4 mb-4">
-              Featured Sarees
-            </h2>
-            <div className="w-16 h-[2px] bg-[#2C2C2C] mx-auto mb-6" />
-            <p className="text-[#4A4A4A] text-base sm:text-lg max-w-2xl mx-auto">
-              Handpicked pieces that showcase the finest craftsmanship and timeless elegance
-            </p>
-          </div>
-
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {featuredSarees.map((saree) => (
-              <ProductCard
-                key={saree.id}
-                id={saree.id}
-                name={saree.name}
-                image={saree.image}
-                description={saree.description}
-              />
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="text-center mt-12 sm:mt-16">
-            <Link
-              href="/collection"
-              className="btn-primary inline-block text-sm sm:text-base tracking-widest uppercase"
-            >
-              Explore Full Collection
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="py-16 sm:py-20 lg:py-28 bg-[#2C2C2C] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl mb-4">
-              The Luxura Silks <span className="text-[#FFE2E2]">Promise</span>
-            </h2>
-            <div className="w-16 h-[2px] bg-[#FFE2E2] mx-auto" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Feature 1 */}
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#FFE2E2]/10 flex items-center justify-center">
-                <svg className="w-8 h-8 text-[#FFE2E2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl sm:text-2xl mb-3 text-[#FFE2E2]">Authentic Craftsmanship</h3>
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                Every saree is handcrafted by master artisans using traditional techniques passed down through generations.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="text-center p-6">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#FFE2E2]/10 flex items-center justify-center">
-                <svg className="w-8 h-8 text-[#FFE2E2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl sm:text-2xl mb-3 text-[#FFE2E2]">Premium Quality</h3>
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                We source only the finest silk and materials, ensuring each piece meets our exacting standards of luxury.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="text-center p-6 sm:col-span-2 lg:col-span-1">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#FFE2E2]/10 flex items-center justify-center">
-                <svg className="w-8 h-8 text-[#FFE2E2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="font-serif text-xl sm:text-2xl mb-3 text-[#FFE2E2]">Personal Service</h3>
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                From selection to delivery, our dedicated team ensures a seamless and personalized experience for every customer.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-r from-[#FFE2E2] to-[#FFE2E2] text-[#2C2C2C]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl mb-6">
-            Ready to Find Your Perfect Saree?
-          </h2>
-          <p className="text-[#4A4A4A] text-base sm:text-lg mb-8 max-w-2xl mx-auto">
-            Browse our exclusive collection and discover pieces that will become treasured additions to your wardrobe.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/collection"
-              className="bg-[#2C2C2C] text-white px-8 py-4 font-medium tracking-widest uppercase text-sm hover:bg-[#1a1a1a] transition-colors"
-            >
-              View Collection
-            </Link>
-            <Link
-              href="/contact"
-              className="border border-[#2C2C2C] text-[#2C2C2C] px-8 py-4 font-medium tracking-widest uppercase text-sm hover:bg-[#2C2C2C] hover:text-white transition-colors"
-            >
-              Get in Touch
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(featuredListSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <HomePageClient />
+    </>
   );
 }

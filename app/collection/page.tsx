@@ -1,9 +1,53 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { allSarees } from "@/lib/data";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Saree Collection",
+  description:
+    "Browse Luxura Silks collection of handcrafted premium sarees, including bridal, festive, and contemporary styles.",
+  alternates: {
+    canonical: "/collection",
+  },
+  openGraph: {
+    title: "Luxura Silks Saree Collection",
+    description:
+      "Browse handcrafted premium sarees curated for weddings, celebrations, and timeless everyday elegance.",
+    url: absoluteUrl("/collection"),
+    images: [
+      {
+        url: absoluteUrl("/hero/heritage-image.webp"),
+        width: 1200,
+        height: 630,
+        alt: "Luxura Silks saree collection",
+      },
+    ],
+  },
+};
 
 export default function CollectionPage() {
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Luxura Silks Saree Collection",
+    url: absoluteUrl("/collection"),
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: allSarees.map((saree, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/collection/${saree.id}`),
+        name: saree.name,
+        image: absoluteUrl(saree.image),
+      })),
+    },
+  };
+
   return (
     <div className="pt-24 sm:pt-28 lg:pt-32">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       {/* Page Header */}
       <section className="bg-[#FDF8F3] py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -58,12 +102,12 @@ export default function CollectionPage() {
               <p className="text-[#4A4A4A] mb-6 max-w-md mx-auto">
                 We have many more exclusive pieces. Contact us for a personalized selection.
               </p>
-              <a
+              <Link
                 href="/contact"
                 className="btn-primary inline-block text-sm tracking-widest uppercase"
               >
                 Get in Touch
-              </a>
+              </Link>
             </div>
           </div>
         </div>

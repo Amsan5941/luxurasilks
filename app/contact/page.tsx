@@ -1,11 +1,78 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { absoluteUrl } from "@/lib/site";
 
 const BLUR_PLACEHOLDER = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAAQAAACdQAA";
 
+const CONTACT_FAQS = [
+  {
+    question: "How quickly does Luxura Silks respond to inquiries?",
+    answer:
+      "We usually respond within 2 to 4 hours during business hours (10 AM to 8 PM IST).",
+  },
+  {
+    question: "Can I get personalized saree recommendations?",
+    answer:
+      "Yes. Share your event type, color preferences, and budget, and our team will suggest curated options.",
+  },
+  {
+    question: "Do you handle bulk and wedding orders?",
+    answer:
+      "Yes, we assist with bridal trousseau and bulk event orders with personalized support.",
+  },
+];
+
+export const metadata: Metadata = {
+  title: "Contact Luxura Silks",
+  description:
+    "Contact Luxura Silks for personalized saree recommendations, custom orders, and bulk inquiries.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact Luxura Silks",
+    description:
+      "Reach out for custom saree requests, personalized styling help, and quick support.",
+    url: absoluteUrl("/contact"),
+    images: [
+      {
+        url: absoluteUrl("/sarees-optimized/IMG_4645.webp"),
+        width: 1200,
+        height: 630,
+        alt: "Contact Luxura Silks",
+      },
+    ],
+  },
+};
+
 export default function ContactPage() {
+  const contactPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact Luxura Silks",
+    url: absoluteUrl("/contact"),
+    description:
+      "Contact Luxura Silks for saree recommendations, custom orders, and personalized assistance.",
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: CONTACT_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
     <div className="pt-24 sm:pt-28 lg:pt-32">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Page Header */}
       <section className="bg-[#FDF8F3] py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -205,6 +272,21 @@ export default function ContactPage() {
           >
             View Collection
           </Link>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-serif text-3xl sm:text-4xl text-[#2C2C2C] text-center mb-10">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {CONTACT_FAQS.map((faq) => (
+              <details key={faq.question} className="border border-[#2C2C2C]/20 p-5 bg-[#FDF8F3]">
+                <summary className="cursor-pointer font-medium text-[#2C2C2C]">{faq.question}</summary>
+                <p className="mt-3 text-[#4A4A4A]">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
     </div>
