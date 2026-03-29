@@ -20,7 +20,71 @@ export default function Home() {
   const bgVideoRef = useRef<HTMLVideoElement>(null);
   const mainVideoRef = useRef<HTMLVideoElement>(null);
 
+  const tryPlayVideos = () => {
+    const mainVideo = mainVideoRef.current;
+    const bgVideo = bgVideoRef.current;
+
+    if (mainVideo) {
+      const mainPlay = mainVideo.play();
+      if (mainPlay && typeof mainPlay.catch === "function") {
+        mainPlay.catch(() => {
+          // Autoplay can be blocked on some devices until visibility/user gesture.
+        });
+      }
+    }
+
+    if (bgVideo) {
+      const bgPlay = bgVideo.play();
+      if (bgPlay && typeof bgPlay.catch === "function") {
+        bgPlay.catch(() => {
+          // Keep silent; background video is cosmetic.
+        });
+      }
+    }
+  };
+
   // Sync both videos for smooth playback
+  useEffect(() => {
+    const mainVideo = mainVideoRef.current;
+    const bgVideo = bgVideoRef.current;
+    if (!mainVideo) return;
+
+    // Some browsers honor defaultMuted state more reliably for autoplay when set directly.
+    mainVideo.defaultMuted = true;
+    mainVideo.muted = true;
+    if (bgVideo) {
+      bgVideo.defaultMuted = true;
+      bgVideo.muted = true;
+    }
+
+    const handleReady = () => {
+      setIsVideoLoaded(true);
+      tryPlayVideos();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        tryPlayVideos();
+      }
+    };
+
+    if (mainVideo.readyState >= 2) {
+      handleReady();
+    }
+
+    mainVideo.addEventListener("loadedmetadata", handleReady);
+    mainVideo.addEventListener("loadeddata", handleReady);
+    mainVideo.addEventListener("canplay", handleReady);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      mainVideo.removeEventListener("loadedmetadata", handleReady);
+      mainVideo.removeEventListener("loadeddata", handleReady);
+      mainVideo.removeEventListener("canplay", handleReady);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   useEffect(() => {
     const syncVideos = () => {
       if (bgVideoRef.current && mainVideoRef.current && isVideoLoaded) {
@@ -116,8 +180,14 @@ export default function Home() {
             playsInline
             preload="auto"
             poster={POSTER_URL}
-            onCanPlay={() => setIsVideoLoaded(true)}
-            onLoadedData={() => setIsVideoLoaded(true)}
+            onCanPlay={() => {
+              setIsVideoLoaded(true);
+              tryPlayVideos();
+            }}
+            onLoadedData={() => {
+              setIsVideoLoaded(true);
+              tryPlayVideos();
+            }}
             className="absolute inset-0 w-full h-full object-contain"
           >
             {VIDEO_SOURCES.map((source, index) => (
